@@ -1,113 +1,88 @@
 # NCBI Protein Comparator
 
-A Python application that allows the user to enter the name of a particular protein and then uses NCBI Protein database to find the amino acid sequence to compare the protein in humans with that in zebrafish.
+A Python application that allows users to search the NCBI Protein database for a specific protein and compare its amino acid sequences between humans and zebrafish.
 
 ## Project Overview
 
-This program allows users to:
+This program enables researchers and students to:
 
-1. Enter the name of a particular protein
-2. Search the NCBI Protein database to find the amino acid sequence
-3. Compare the protein between humans and zebrafish
-4. Obtain information about whether the protein is present in both organisms
-5. View the results of the comparison between sequences with percentage of identity
+1. Enter the name of a specific protein
+2. Search the NCBI Protein database to find the amino acid sequences
+3. Compare the protein sequences between humans and zebrafish
+4. View the similarity percentage and composition analysis
 
-The program provides a clean separation between business logic and the user interface (UI), with all generated files (like `__pycache__`) properly excluded from version control via .gitignore.
+The application features a clean separation between business logic and user interface, allowing the core functionality to be reused independently of the GUI.
 
-## Scientific Background and Project Inspiration
+## Inspiration
 
-I got the idea from one of the projects I'm currently working on where we're screening a number of different FDA-approved drugs for a lymphatic vessel disease that currently has no drug treatment. To do this, we're introducing a copy of the mutant gene from a patient into zebrafish, which we're using as a model. The gene we're working with is known to be conserved between humans and zebrafish, and we want to see if a mutation in it causes the same disease. This project should also serve as a pipeline for genes that cause other diseases down the road.
+This project was developed to support research on conserved genes between humans and zebrafish, particularly for studying disease mechanisms using zebrafish as a model organism. It serves as a pipeline tool for screening genes and identifying sequence conservation across species.
 
 ## Features
 
-NCBI Integration
-  Search the NCBI Protein database for specific proteins
+- **NCBI Integration**: Direct access to the NCBI Protein database for real-time protein searches
+- **Multi-organism Comparison**: Automatically searches for the same protein in both humans and zebrafish
+- **Sequence Analysis**: Calculates identity percentages and similarity ratios
+- **User-Friendly GUI**: Simple, intuitive interface built with tkinter
+- **NCBI Rate Limiting**: Respects NCBI's rate limits (0.4 seconds between requests) to avoid connection issues
 
-Multi-organism Search
-  Automatically searches for the same protein in both humans and zebrafish
+## Project Structure
 
-Sequence Retrieval
-  Fetches complete amino acid sequences for found proteins
-
-Sequence Comparison
-  Calculates sequence identity percentage
-  Computes similarity ratios
-  Analyzes amino acid composition
-
-User-Friendly GUI
-  Built with tkinter for easy interaction
-
-NCBI Rate Limiting
-  Respects NCBI's rate limits (0.4 seconds between requests)
-
-## Architecture: Separated Business Logic and UI
-
-This program implements a clean separation of concerns with professional software architecture:
-
-Business Logic (business_logic/ package)
-  Pure Python modules with NO UI dependencies
-  Contains all NCBI interactions and sequence analysis
-  Can be used independently in CLI, Web, or other applications
-  Easy to test and reuse in different contexts
-
-User Interface (ui/ package)
-  tkinter-based GUI implementation
-  Depends only on the business_logic package
-  Handles all user interaction and display
-  Can be replaced with alternative UI frameworks
-
-This separation ensures:
-  Clean code organization
-  Testability of business logic
-  Reusability across different interfaces
-  Easy maintenance and extension
-
-## .gitignore Configuration
-
-The project includes proper .gitignore configuration to prevent uploading:
-  __pycache__/ - Python cache directories
-  *.pyc - Compiled Python files
-  *.pyo - Optimized Python files
-  *.pyd - Python dynamic modules
-  .venv/ and venv/ - Virtual environment folders
-  .vscode/ and .idea/ - IDE configuration
-  *.egg-info/ - Package metadata
-  dist/ and build/ - Build artifacts
-  .env and .env.local - Environment variables
-  *.cache and *.tmp - Temporary files
-  *.log - Log files
-
-This ensures only source code and essential files are committed to GitHub.
+```
+NCBI-Protein-Comparator/
+├── business_logic/           # Core logic (no UI dependencies)
+│   ├── __init__.py
+│   ├── protein_comparator.py # Main orchestrator
+│   ├── ncbi_protein_fetcher.py # NCBI database access
+│   └── sequence_analyzer.py  # Sequence comparison
+│
+├── ui/                       # User interface
+│   ├── __init__.py
+│   └── gui.py               # tkinter GUI implementation
+│
+├── main.py                  # Application entry point
+├── config.py               # Configuration settings
+├── requirements.txt        # Python dependencies
+├── .gitignore             # Git ignore file (excludes __pycache__, venv, etc.)
+└── README.md              # This file
+```
 
 ## Installation
 
-Prerequisites:
-  Python 3.7 or higher
-  pip package manager
+### Prerequisites
+- Python 3.7 or higher
+- pip package manager
 
-Setup:
+### Setup
 
 1. Navigate to the project directory:
-   cd day04/project
+   ```bash
+   cd NCBI-Protein-Comparator
+   ```
 
-2. Install required packages:
+2. (Optional) Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install required packages:
+   ```bash
    pip install -r requirements.txt
+   ```
 
 ## Usage
 
-Running the GUI Application
+Launch the GUI application:
 
-   python main.py
+```bash
+python main.py
+```
 
-This will launch a GUI window where you can:
+### How to Use
 
-1. Enter a protein name (e.g., "hemoglobin", "insulin", "catalase")
-2. Click "Search & Compare" to:
-   - Search NCBI for the protein in humans
-   - Search NCBI for the protein in zebrafish
-   - Retrieve both sequences
-   - Compare them and display results
-3. View Results showing:
+1. Enter a protein name (e.g., "hemoglobin", "insulin", "myoglobin")
+2. Click "Search & Compare" to search NCBI
+3. View the results showing:
    - Whether the protein was found in each organism
    - Protein accession IDs
    - Sequence lengths
@@ -202,106 +177,101 @@ Command Line (Python script)
        )
        print(f"Identity: {comparison['identity_percentage']:.2f}%")
 
+## Dependencies
+
+- **biopython**: For NCBI interaction and sequence handling
+- **requests**: For HTTP requests (installed as a dependency of biopython)
+
+See `requirements.txt` for specific version requirements.
+
 ## Important Notes
 
-NCBI Guidelines
-  This application respects NCBI's usage guidelines by implementing rate limiting
-  An email address is required and is set to "student@python-course.com" by default
-  For production use, change the email in config.py
+### NCBI Guidelines
+- This application respects NCBI's usage guidelines through rate limiting
+- An email address is required by NCBI and is set to "student@python-course.com" by default
+- For production use, update the email in `config.py`
 
-Search Tips
-  1. Use common protein names (e.g., "hemoglobin", "insulin", "myoglobin")
-  2. More specific searches are often more successful
-  3. Some proteins may only be annotated in one organism
+### Search Tips
+- Use common protein names (e.g., "hemoglobin", "insulin")
+- More specific searches are often more successful
+- Some proteins may only be annotated in one organism
 
-Known Limitations
-  Simple sequence matching (not advanced alignment algorithms like BLAST)
-  Identity percentage based on longest sequence as reference
-  Limited to the first matching result for each organism
-  Requires internet connection for NCBI access
+### Known Limitations
+- Uses simple sequence matching (not advanced alignment algorithms like BLAST)
+- Limited to the first matching result for each organism
+- Requires internet connection for NCBI access
 
-## Supported Organisms
+## Interpreting Results
 
-Homo sapiens (Human)
-Danio rerio (Zebrafish)
-
-## Results Interpretation
-
-Identity Percentage
-  >80%:    High similarity, likely homologous proteins
-  50-80%:  Moderate similarity, probable function conservation
-  <50%:    Low similarity, different protein families
-
-Sequence Statistics
-  Shows the distribution of amino acids in each sequence
-  Helps identify compositional differences between organisms
+- **>80% Identity**: High similarity, likely homologous proteins
+- **50-80% Identity**: Moderate similarity, probable function conservation
+- **<50% Identity**: Low similarity, distantly related proteins
 
 ## Troubleshooting
 
-"NCBI search error"
-  Check your internet connection
-  Ensure you have recent versions of required packages
-  NCBI servers may be temporarily unavailable
+### "NCBI search error"
+- Check your internet connection
+- Ensure NCBI servers are accessible
+- Verify you have recent versions of required packages
 
-"Protein not found"
-  Try a different protein name
-  Use the full protein name instead of abbreviation
-  Some proteins may not be in the NCBI database
+### "Protein not found"
+- Try a different protein name or variant
+- Use the full protein name instead of abbreviations
+- Some proteins may not be in the NCBI database
 
-"No sequences returned"
-  NCBI may have the protein but without sequence data
-  Try searching for a different protein variant
+### "No sequences returned"
+- NCBI may have the protein but without sequence data
+- Try searching for a different protein variant
 
 ## Architecture
 
-Clean Separation of Concerns
+### Clean Separation of Concerns
 
-business_logic/ - Pure Python, NO tkinter or UI dependencies
-  Can be used independently in CLI, Web, or other applications
-  Easy to test without GUI
-  Can be imported and reused in other projects
+**business_logic/** - Pure Python modules with NO UI dependencies
+- Can be used independently in CLI, Web, or other applications
+- Easy to test without GUI
+- Can be imported and reused in other projects
 
-ui/ - GUI Implementation
-  Depends on business_logic
-  Handles all user interaction and display
-  Can be replaced with alternative UI (Qt, Web, etc.)
+**ui/** - GUI Implementation
+- Depends only on business_logic
+- Handles all user interaction and display
+- Can be replaced with alternative UI frameworks (Qt, Web, etc.)
+
+## .gitignore
+
+The project includes a comprehensive `.gitignore` file that excludes:
+- Python cache directories (`__pycache__/`)
+- Compiled Python files (`*.pyc`, `*.pyo`)
+- Virtual environments (`venv/`, `.venv/`)
+- IDE configuration files (`.vscode/`, `.idea/`)
+- Build artifacts (`build/`, `dist/`, `*.egg-info/`)
+- Environment variables files (`.env`, `.env.local`)
+- Temporary files (`*.log`, `*.tmp`, `*.cache`)
+
+This ensures only source code and essential configuration files are committed to GitHub.
 
 ## Future Enhancements
 
-Support for multiple organisms
-Advanced alignment algorithms (MUSCLE, ClustalW)
-Multiple sequence alignment visualization
-Export results to FASTA format
-Phylogenetic tree generation
-WebLogo visualization of sequence alignment
-Command-line interface (CLI)
-Web-based interface (Flask/Django)
-
-## Dependencies
-
-biopython - For NCBI interaction and sequence handling
-           https://biopython.org/
-
-requests - For HTTP requests (dependency of biopython)
-          https://requests.readthedocs.io/
+- Support for additional organisms
+- Advanced alignment algorithms (MUSCLE, ClustalW)
+- Multiple sequence alignment visualization
+- Export results to FASTA format
+- Phylogenetic tree generation
+- Web-based interface (Flask/Django)
+- Command-line interface (CLI)
 
 ## References
 
-NCBI Entrez API
-  https://www.ncbi.nlm.nih.gov/books/NBK25499/
-
-BioPython Documentation
-  https://biopython.org/
-
-NCBI Protein Database
-  https://www.ncbi.nlm.nih.gov/protein/
+- [NCBI Entrez API Documentation](https://www.ncbi.nlm.nih.gov/books/NBK25499/)
+- [BioPython Documentation](https://biopython.org/)
+- [NCBI Protein Database](https://www.ncbi.nlm.nih.gov/protein/)
 
 ## License
 
-This educational project is provided as-is for learning purposes.
+This educational project is provided as-is for learning and research purposes.
 
 ## Author
 
 Created for Python course assignments - Educational Project
 
-Last Updated: November 2025
+Last Updated: December 2025
